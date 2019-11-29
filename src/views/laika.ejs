@@ -81,10 +81,20 @@
 
                 this.socket.on('isAuth', data => {
                     console.log(data.users_auth)
+
+                    this.setUsersConn(data.users_auth)
                     this.isAuth = data.auth
                 })
             },
             methods: {
+
+                setUsersConn(data) {
+                    JSON.stringify(data)
+                },
+
+                getUsersConn(data) {
+                    JSON.stringify(data)
+                },
 
                 auth() {
                     this.socket.emit('new_auth', this.user)
