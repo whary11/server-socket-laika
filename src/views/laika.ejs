@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sockets Laika</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        
+        .nickname:hover {
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)!important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak class="container">
+
+        <div class="row justify-content-center mt-4" v-if="isAuth">
+            <div class="col-md-4 card">
+                <p>User 1 conectado</p>
+                <p>User 2 conectado</p>
+                <p>User 3 conectado</p>
+                <p>User 4 conectado</p>
+            </div>
+            <div class="col-md-8">
+                <div class="card col-md-12">
+                    <div class="card-body">
+                        <p>User 1</p>
+                        <p class="float-right">User 2</p>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Escribe tu mensaje e interactua.." aria-label="Username" aria-describedby="basic-addon1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-dark text-white" id="basic-addon1">Enviar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center" v-else>
+
+            <div class="form-group col-md-6" style="margin-top:20%;">
+                <input type="text" v-model="user.nickname" class="form-control nickname" placeholder="Nickname" @keypress.enter="auth()">
+                <small id="emailHelp" class="form-text text-success">Escribe tu nickname y descubre lo que hay detrás.</small>
+                <pre>{{user}}</pre>
+            </div>
+
+        </div>
+
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                user: {
+                    nickname: '',
+                    avatar: '',
+                },
+                isAuth: false,
+                socket: null,
+                messages: []
+            },
+            mounted() {
+                this.socket = io()
+
+                this.socket.on('new_user', data => {
+                    console.log(data)
+                })
+
+                this.socket.on('isAuth', data => {
+                    console.log(data.users_auth)
+                    this.isAuth = data.auth
+                })
+            },
+            methods: {
+
+                auth() {
+                    this.socket.emit('new_auth', this.user)
+                }
+
+            }
+        })
+    </script>
+</body>
+
+</html>
