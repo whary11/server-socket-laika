@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sockets Laika</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
         [v-cloak] {
             display: none;
         }
-        
+
         .nickname:hover {
-            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15)!important;
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
         }
     </style>
 </head>
@@ -23,10 +24,8 @@
 
         <div class="row justify-content-center mt-4" v-if="isAuth">
             <div class="col-md-4 card">
-                <p>User 1 conectado</p>
-                <p>User 2 conectado</p>
-                <p>User 3 conectado</p>
-                <p>User 4 conectado</p>
+                <p v-for="(item, index) in userConnet" :key="index">{{item.user.nickname}}</p>
+
             </div>
             <div class="col-md-8">
                 <div class="card col-md-12">
@@ -36,7 +35,8 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Escribe tu mensaje e interactua.." aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="text" class="form-control" placeholder="Escribe tu mensaje e interactua.."
+                        aria-label="Username" aria-describedby="basic-addon1">
                     <div class="input-group-prepend">
                         <span class="input-group-text bg-dark text-white" id="basic-addon1">Enviar</span>
                     </div>
@@ -47,15 +47,18 @@
         <div class="row justify-content-center" v-else>
 
             <div class="form-group col-md-6" style="margin-top:20%;">
-                <input type="text" v-model="user.nickname" class="form-control nickname" placeholder="Nickname" @keypress.enter="auth()">
-                <small id="emailHelp" class="form-text text-success">Escribe tu nickname y descubre lo que hay detrás.</small>
+                <input type="text" v-model="user.nickname" class="form-control nickname" placeholder="Nickname"
+                    @keypress.enter="auth()">
+                <small id="emailHelp" class="form-text text-success">Escribe tu nickname y descubre lo que hay
+                    detrás.</small>
                 <pre>{{user}}</pre>
             </div>
 
         </div>
 
     </div>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -68,6 +71,7 @@
                     nickname: '',
                     avatar: '',
                 },
+                user_connect: [],
                 isAuth: false,
                 socket: null,
                 messages: []
@@ -77,30 +81,49 @@
 
                 this.socket.on('new_user', data => {
                     console.log(data)
+                    this.setUsersConn(data)
+                    this.user_connect = false;
                 })
 
                 this.socket.on('isAuth', data => {
                     console.log(data.users_auth)
-
-                    this.setUsersConn(data.users_auth)
+                    this.user_connect = data.users_auth
+                    this.setUsersConn(data.users_auth, 1)
+                    this.user_connect = true;
                     this.isAuth = data.auth
                 })
             },
             methods: {
-
-                setUsersConn(data) {
-                    JSON.stringify(data)
+                setUsersConn(data, i) {
+                    let previous_data;
+                    if (!i) {
+                        previous_data = this.getUsersConn()
+                        previous_data.push(data)
+                    } else {
+                        previous_data = data
+                    }
+                    let data_local = localStorage.setItem('users_auth', JSON.stringify(previous_data))
+                    return true;
                 },
 
-                getUsersConn(data) {
-                    JSON.stringify(data)
+                getUsersConn() {
+                    let data = localStorage.getItem('users_auth')
+                    return JSON.parse(data)
                 },
 
                 auth() {
                     this.socket.emit('new_auth', this.user)
                 }
 
-            }
+            },
+
+            computed: {
+                userConnet() {
+                    let e = this.user_connect
+                    console.log('Hacer algo')
+                    return this.getUsersConn()
+                }
+            },
         })
     </script>
 </body>

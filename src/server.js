@@ -27,17 +27,17 @@ app.set('views', path.join(__dirname, 'views'));
 //Motor
 app.set('view engine', 'ejs');
 app.get('/laika', (req, res) => {
-        res.render('laika');
-    })
-    // Inicializar servidor
+    res.render('laika');
+})
+// Inicializar servidor
 const server = app.listen(app.get('port'), () => {
     // console.log(`Servidor corriendo en el puerto ${app.get('port')}`)
 
 
-    Object.keys(ifaces).forEach(function(ifname) {
+    Object.keys(ifaces).forEach(function (ifname) {
         var alias = 0;
 
-        ifaces[ifname].forEach(function(iface) {
+        ifaces[ifname].forEach(function (iface) {
             if ('IPv4' !== iface.family || iface.internal !== false) {
                 // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
                 return;
@@ -70,7 +70,7 @@ const server = app.listen(app.get('port'), () => {
 
 ///// Eventos del socket
 const io = SocketIO.listen(server)
-    // Estos procesos se delegaron a la ruta socket/socket-mobile.js
+// Estos procesos se delegaron a la ruta socket/socket-mobile.js
 chat(io)
 
 internal_chat(io)

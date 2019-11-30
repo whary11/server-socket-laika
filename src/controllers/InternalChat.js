@@ -10,6 +10,8 @@ module.exports = async io => {
                 user: data,
                 socket
             }
+
+            console.log(auths[socket.id + '' + data.nickname].user)
             let users_auth = []
 
             for (const key in auths) { //recorrer objeto para seleccionar los usarios a los cuales se les enviará el sockect con el nuevo usuario conecatdo
@@ -18,18 +20,26 @@ module.exports = async io => {
                         user: auths[key].user,
                         token: key
                     })
+                    auths[key].socket.emit('new_user', {
+                        user: auths[socket.id + '' + data.nickname].user,
+                        token: socket.id + '' + data.nickname
+                    }) // emitir evento a los usuarios conecatdos
+
                 }
 
             }
 
-            for (const key in auths) {
-                if (key != socket.id + '' + data.nickname) {
-                    auths[key].socket.emit('new_user', users_auth) // emitir evento a los usuarios conecatdos
-                }
+            // for (const key in auths) {
+            //     if (key != socket.id + '' + data.nickname) {
+            //         auths[key].socket.emit('new_user', users_auth) // emitir evento a los usuarios conecatdos
+            //     }
 
-            }
+            // }
 
-            socket.emit('isAuth', { auth: true, users_auth }) //al usuario conectado se le envian los usuarios conecatdos excepto él 
+            socket.emit('isAuth', {
+                auth: true,
+                users_auth
+            }) //al usuario conectado se le envian los usuarios conecatdos excepto él 
 
 
 
