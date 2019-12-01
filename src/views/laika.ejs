@@ -16,6 +16,21 @@
         .nickname:hover {
             box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
         }
+
+        .avatar_contact {
+            border-radius: 50%;
+        }
+
+        .contact_body {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .contact_message {
+            max-height: 350 px;
+            height: 350px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -23,13 +38,70 @@
     <div id="app" v-cloak class="container">
 
         <div class="row justify-content-center mt-4" v-if="isAuth">
-            <div class="col-md-4 card">
-                <p v-for="(item, index) in userConnet" :key="index">{{item.user.nickname}}</p>
+
+            <div class="col-md-4 card shadow-sm">
+                <div class="m-2">
+                    <input type="text" class="form-control" placeholder="Buscar contacto...">
+                </div>
+
+                <div class="contact_body">
+                    <!-- <p v-for="(item, index) in userConnet" :key="index">{{item.user.nickname}}</p> -->
+
+                    <div class="rounded-pill m-3" v-for="(item, index) in userConnet" :key="index">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">{{item.user.nickname}}</span>
+                    </div>
+                    <!-- <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+                    <div class="rounded-pill m-3">
+                        <span class="avatar_contact bg-dark text-white p-2">{{getAvatarContact}}</span>
+                        <span class="m-1">Luis Raga</span>
+                    </div>
+
+ -->
+                </div>
+
+
 
             </div>
             <div class="col-md-8">
-                <div class="card col-md-12">
+                <div class="card col-md-12 contact_message">
                     <div class="card-body">
+                        <p class="">User 1</p>
+                        <p class="float-right">User 1</p>
+                        <p>User 1</p>
+                        <p class="float-right">User 1</p>
                         <p>User 1</p>
                         <p class="float-right">User 2</p>
                     </div>
@@ -122,6 +194,9 @@
                     let e = this.user_connect
                     console.log('Hacer algo')
                     return this.getUsersConn()
+                },
+                getAvatarContact() {
+                    return 'LR'
                 }
             },
         })

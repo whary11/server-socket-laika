@@ -2,10 +2,7 @@ module.exports = async io => {
     let auths = {}
 
     io.on('connection', socket => {
-
         socket.on('new_auth', data => {
-
-
             auths[socket.id + '' + data.nickname] = {
                 user: data,
                 socket
@@ -28,14 +25,6 @@ module.exports = async io => {
                 }
 
             }
-
-            // for (const key in auths) {
-            //     if (key != socket.id + '' + data.nickname) {
-            //         auths[key].socket.emit('new_user', users_auth) // emitir evento a los usuarios conecatdos
-            //     }
-
-            // }
-
             socket.emit('isAuth', {
                 auth: true,
                 users_auth
