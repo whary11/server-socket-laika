@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat Domiciliario</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <div v-for="(item, index) in message" :key="index">
+                    <p class="text-left" v-if="item.id == user.from">
+                        <span>{{item.id}} Escribió: {{item.message}}</span>
+                    </p>
+                    <p class="text-right" v-else>
+                        <span>{{item.id}} Escribió: {{item.message}}</span>
+                    </p>
+                </div>
+                <div class="form-group col-md-12">
+                    <input name="" class="form-control" type="text" placeholder="Escribe tu mensaje" v-model="user.message" @keyPress.enter="new_message()">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                socket: null,
+                message: [],
+                user: {
+                    order_id: 1,
+                    from: 'mya47@example.org',
+                    to: '',
+                    message: '',
+                    role: 'DOMICILIARY'
+                }
+            },
+            mounted() {
+                this.socket = io()
+
+                this.socket.on('new_message', msg => {
+                    console.log(msg)
+
+                    this.message.push(msg)
+                })
+
+
+                this.socket.on('welcome', msg => {
+
+                    console.log(msg)
+
+                    msg.map(m => {
+                        this.message.push(m)
+
+                    })
+                })
+
+                this.socket.on('your_order', msg => { // Sockect con la orden que abre este chat en doble via
+                    this.user.to = msg.order.customer_email
+                    console.log(msg)
+                })
+                this.socket.emit('Order', this.user)
+            },
+            methods: {
+                new_message() {
+                    this.message.push({
+                        message: this.user.message,
+                        id: this.user.from
+                    })
+                    this.socket.emit('new_message', this.user)
+                    this.user.message = ''
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
