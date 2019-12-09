@@ -3,39 +3,64 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Chat Cliente</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
     <style>
         [v-cloak] {
             display: none;
+        }
+
+        #messages {
+            max-height: 450px;
+            overflow: scroll;
+        }
+
+        .avatar_contact {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
         }
     </style>
 </head>
 
 <body>
     <div id="app" v-cloak class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div v-for="(item, index) in message" :key="index">
-                    <p class="text-left" v-if="item.id == user.from">
-                        <span>{{item.id}} Escribió: {{item.message}}</span>
-                    </p>
-                    <p class="text-right" v-else>
-                        <span>{{item.id}} Escribió: {{item.message}}</span>
-                    </p>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h3 class="text-center">Chat Cliente</h3>
+                <div id="messages" class="p-4">
+                    <div v-for="(item, index) in getMessages" :key="index">
+                        <div class="rounded-pill m-3 text-left animated fadeInLeft" v-if="item.id == user.from">
+                            <span class="avatar_contact bg-primary text-white p-2
+                                shadow-sm">{{getAvatarContact(item.id[0])}}</span>
+                            <span>{{item.message}}</span>
+                        </div>
+                        <div class="rounded-pill m-3 text-right animated bounceInRight" v-else>
+                            <span> {{item.message}}</span>
+                            <span class="avatar_contact bg-danger text-white p-2
+                                shadow-sm">{{getAvatarContact(item.id[0])}}</span>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="form-group col-md-12">
-                    <input name="" class="form-control" type="text" placeholder="Escribe tu mensaje" v-model="user.message" @keyPress.enter="new_message()">
+                <div class="form-group col-md-12 mt-3">
+                    <input name="" class="form-control shadow-sm" type="text"
+                        placeholder="Escribe tu mensaje al domiciliario" v-model="user.message"
+                        @keyPress.enter="new_message()">
                 </div>
             </div>
-            <input type="file" name="image" @change="getUrlImage" id="image" class="btn btn-success">
+            <!-- <input type="file" name="image" @change="getUrlImage" id="image" class="btn btn-success"> -->
         </div>
     </div>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -45,13 +70,12 @@
     <script src="//cdn.jsdelivr.net/react/15.4.2/react.min.js"></script>
     <script src="//cdn.jsdelivr.net/react/15.4.2/react-dom.min.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/graphiql/0.13.0/graphiql.min.js" charset="utf-8"></script> -->
-
     <script>
         new Vue({
             el: '#app',
             data: {
                 socket: null,
-                message: [],
+                messages: [],
 
                 user: {
                     order_id: 1,
@@ -66,12 +90,16 @@
                 this.socket.on('welcome', msg => {
                     console.log(msg)
                     msg.map(m => {
-                        this.message.push(m)
+                        this.messages.push(m)
                     })
+                    setTimeout(() => {
+                        this.scrollTop()
+                    }, 20)
                 })
 
                 this.socket.on('new_message', msg => {
-                    this.message.push(msg)
+                    this.messages.push(msg)
+
                 })
 
                 this.socket.on('your_order', msg => { // Sockect con la orden que abre este chat en doble via
@@ -81,15 +109,31 @@
                     console.log(msg)
                 })
                 this.socket.emit('Order', this.user)
+
+
+
+
             },
+
+            beforeMount() {},
             methods: {
                 new_message() {
-                    this.message.push({
-                        message: this.user.message,
-                        id: this.user.from
-                    })
-                    this.socket.emit('new_message', this.user)
-                    this.user.message = ''
+                    if (this.user.message.trim() != '') {
+                        this.messages.push({
+                            message: this.user.message,
+                            id: this.user.from
+                        })
+                        this.socket.emit('new_message', this.user)
+                        this.user.message = ''
+                        return
+                    }
+                },
+
+                scrollTop() {
+                    document.getElementById('messages').scrollTop = document.getElementById('messages')
+                        .scrollTop + 1000000
+                    console.log('mensajes');
+                    console.log(document.getElementById('messages').scrollTop);
                 },
 
                 getUrlImage(e) {
@@ -128,7 +172,23 @@
                         .catch(err => {
                             console.error(err);
                         })
+                },
+                getAvatarContact(letter) {
+                    return letter.toUpperCase()
+                },
+                getUserName(email) {
+                    return email.replace(/^(.+)@(.+)$/g, '$1')
                 }
+            },
+
+            computed: {
+                getMessages() {
+
+                    setTimeout(() => {
+                        this.scrollTop()
+                    }, 20)
+                    return this.messages
+                },
             },
         })
     </script>
