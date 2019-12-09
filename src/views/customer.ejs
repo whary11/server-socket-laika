@@ -12,12 +12,12 @@
         [v-cloak] {
             display: none;
         }
-
+        
         #messages {
             max-height: 450px;
-            overflow: scroll;
+            overflow-y: scroll;
         }
-
+        
         .avatar_contact {
             width: 100%;
             height: 100%;
@@ -47,19 +47,15 @@
 
                 </div>
                 <div class="form-group col-md-12 mt-3">
-                    <input name="" class="form-control shadow-sm" type="text"
-                        placeholder="Escribe tu mensaje al domiciliario" v-model="user.message"
-                        @keyPress.enter="new_message()">
+                    <input name="" class="form-control shadow-sm" type="text" placeholder="Escribe tu mensaje al domiciliario" v-model="user.message" @keyPress.enter="new_message()">
                 </div>
             </div>
             <!-- <input type="file" name="image" @change="getUrlImage" id="image" class="btn btn-success"> -->
         </div>
     </div>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
