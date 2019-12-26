@@ -12,7 +12,7 @@ const chat = require('./controllers/Chat');
 
 
 // Definimos el puerto en el objeto app 
-app.set('port', process.env.PORT || 3000)
+app.set('port', process.env.PORT || 8081)
 
 
 //archivos estáticos
