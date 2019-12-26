@@ -7,8 +7,17 @@ const SocketIO = require('socket.io')
 const chat = require('./controllers/Chat');
 const internal_chat = require('./controllers/InternalChat')
 
+
+
 //pm2 start src/server.js
 //pm2 stop
+
+//Iniciar el servicio para que se ejecute siempre 
+//pm2 startup systemd
+//sudo systemctl start pm2-lraga
+
+//Conocer el estado de ejecusión de la aplicación.
+//sudo systemctl status pm2-lraga   ///lraga es el nombre que en nuestro caso le asignó a la aplicación.
 
 
 // var morgan = require('morgan')

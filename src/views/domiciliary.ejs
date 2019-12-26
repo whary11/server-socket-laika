@@ -13,16 +13,20 @@
         [v-cloak] {
             display: none;
         }
-
+        
         #messages {
             max-height: 450px;
-            overflow: scroll;
+            overflow-y: scroll;
         }
-
+        
         .avatar_contact {
             width: 100%;
             height: 100%;
             border-radius: 50%;
+        }
+        
+        .bg-laika {
+            background-color: #6951ae;
         }
     </style>
 </head>
@@ -34,32 +38,28 @@
                 <h3 class="text-center">Chat Domiciliario</h3>
                 <div id="messages" class="p-4">
                     <div v-for="(item, index) in getMessages" :key="index">
-                        <div class="rounded-pill m-3 text-left animated fadeInLeft" v-if="item.id == user.from">
-                            <span class="avatar_contact bg-primary text-white p-2
-                                shadow-sm">{{getAvatarContact(item.id[0])}}</span>
+                        <div class="rounded-pill m-3 text-right animated fadeInLeft" v-if="item.id == user.from">
+                            <span class="avatar_contact bg-laika text-white p-2
+                                shadow-sm">LK</span>
                             <span>{{item.message}}</span>
                         </div>
-                        <div class="rounded-pill m-3 text-right animated bounceInRight" v-else>
-                            <span> {{item.message}}</span>
+                        <div class="rounded-pill m-3 text-left animated bounceInRight" v-else>
                             <span class="avatar_contact bg-danger text-white p-2
                                 shadow-sm">{{getAvatarContact(item.id[0])}}</span>
+                            <span> {{item.message}}</span>
                         </div>
                     </div>
                 </div>
                 <div class="form-group col-md-12 mt-3">
-                    <input name="" class="form-control shadow-sm" type="text"
-                        placeholder="Escribe tu mensaje al domiciliario" v-model="user.message"
-                        @keyPress.enter="new_message()">
+                    <input name="" class="form-control shadow-sm" type="text" placeholder="Escribe tu mensaje al domiciliario" v-model="user.message" @keyPress.enter="new_message()">
                 </div>
             </div>
             <!-- <input type="file" name="image" @change="getUrlImage" id="image" class="btn btn-success"> -->
         </div>
     </div>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
     </script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
